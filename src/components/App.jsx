@@ -9,6 +9,7 @@ import { Container } from './GlobalStyle';
 
 
 
+const storageKey = 'saveContacts';
 
 export class App extends Component {
   state = {
@@ -20,6 +21,24 @@ export class App extends Component {
     ],
     filter: '',
   };
+
+  
+  componentDidMount() {
+    const savedContacts = localStorage.getItem(storageKey);
+    if (savedContacts !== null) {
+      this.setState({
+        contacts: JSON.parse(savedContacts),
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem(storageKey, JSON.stringify(this.state.contacts));
+    }
+  }
+
+
 
   addContact = cont => {
     this.setState(prevState => {
