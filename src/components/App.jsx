@@ -6,9 +6,6 @@ import { NameInput } from './NameInput/NameInput';
 import { Filter } from './Filter/Filter';
 import { Container } from './GlobalStyle';
 
-
-
-
 const storageKey = 'saveContacts';
 
 export class App extends Component {
@@ -22,7 +19,6 @@ export class App extends Component {
     filter: '',
   };
 
-  
   componentDidMount() {
     const savedContacts = localStorage.getItem(storageKey);
     if (savedContacts !== null) {
@@ -37,8 +33,6 @@ export class App extends Component {
       localStorage.setItem(storageKey, JSON.stringify(this.state.contacts));
     }
   }
-
-
 
   addContact = cont => {
     this.setState(prevState => {
@@ -64,17 +58,22 @@ export class App extends Component {
     });
   };
 
-  
-  render() {
+  filteredContacts = () => {
     const { contacts, filter } = this.state;
+
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filter.toLowerCase())
+    );
+  };
+
+  render() {
     return (
-      
       <Container>
         <h1>Phonebook</h1>
         <NameInput addstate={this.addContact} state={this.state} />
         <h2>Contacts</h2>
         <Filter filter={this.getFilter} />
-        <Contacts contacts={contacts} filter={filter} delContact={this.delContact} />
+        <Contacts contacts={this.filteredContacts()} delContact={this.delContact} />
         <GlobalStyle />
       </Container>
     );
